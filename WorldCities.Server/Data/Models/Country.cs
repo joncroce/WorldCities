@@ -1,21 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿namespace WorldCities.Server.Data.Models;
 
-namespace WorldCities.Server.Data.Models;
-
-[Table("Countries")]
-[Index(nameof(Name))]
-[Index(nameof(ISO2))]
-[Index(nameof(ISO3))]
 public class Country
 {
     #region Properties
     /// <summary>
     /// The unique id and primary key for this Country
     /// </summary>
-    [Key]
-    [Required]
     public int Id { get; set; }
 
     /// <summary>
