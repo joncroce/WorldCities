@@ -2,9 +2,15 @@
 
 <p>Here's a list of cities: feel free to play with it.</p>
 
-<p *ngIf="!cities">
-    <em>Loading...</em>
-</p>
+<p *ngIf="!cities"><em>Loading...</em></p>
+
+<button mat-flat-button
+    color="primary"
+    class="btn-add"
+    *ngIf="cities"
+    [routerLink]="['/city']">
+    Add a new City
+</button>
 
 <mat-form-field [hidden]="!cities">
     <input matInput

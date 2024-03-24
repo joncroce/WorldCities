@@ -20,6 +20,10 @@ const routes: Routes = [
     component: CityEditComponent
   },
   {
+    path: 'city',
+    component: CityEditComponent
+  },
+  {
     path: 'countries',
     component: CountriesComponent
   }
