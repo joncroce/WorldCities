@@ -15,7 +15,7 @@
 <mat-form-field [hidden]="!cities">
     <input matInput
         #filter
-        (keyup)="loadData(filter.value)"
+        (keyup)="onFilterTextChanged(filter.value)"
         placeholder="Filter by name (or part of it)...">
 </mat-form-field>
 
