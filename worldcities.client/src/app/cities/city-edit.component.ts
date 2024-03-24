@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AbstractControl, AsyncValidatorFn, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Observable, map } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { Country } from './../countries/country';
-import { City } from './city';
+import { AbstractControl, AsyncValidatorFn, FormControl, FormGroup, Validators } from '@angular/forms';
+import type { Country } from './../countries/country';
+import type { City } from './city';
 
 @Component({
   selector: 'app-city-edit',
