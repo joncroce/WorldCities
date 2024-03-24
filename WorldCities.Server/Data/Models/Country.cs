@@ -1,4 +1,6 @@
-﻿namespace WorldCities.Server.Data.Models;
+﻿using System.Text.Json.Serialization;
+
+namespace WorldCities.Server.Data.Models;
 
 public class Country
 {
@@ -16,11 +18,13 @@ public class Country
     /// <summary>
     /// Country code (in ISO 3166-1 ALPHA-2 format)
     /// </summary>
+    [JsonPropertyName("iso2")]
     public required string ISO2 { get; set; }
 
     /// <summary>
     /// Country code (in ISO 3166-1 ALPHA-3 format
     /// </summary>
+    [JsonPropertyName("iso3")]
     public required string ISO3 { get; set; }
     #endregion
 
