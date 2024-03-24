@@ -2,9 +2,14 @@
 
 <p>Here's a list of countries: feel free to play with it.</p>
 
-<p *ngIf="!countries">
-    <em>Loading...</em>
-</p>
+<p *ngIf="!countries"><em>Loading...</em></p>
+
+<button mat-flat-button
+        color="primary"
+        class="btn-add"
+        [routerLink]="['/country']">
+    Add a new Country
+</button>
 
 <mat-form-field [hidden]="!countries">
     <input matInput
@@ -30,7 +35,9 @@
     <!-- Name Column -->
     <ng-container matColumnDef="name">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
-        <td mat-cell *matCellDef="let country">{{ country.name }}</td>
+        <td mat-cell *matCellDef="let country">
+            <a [routerLink]="['/country', country.id]">{{ country.name }}</a>
+        </td>
     </ng-container>
 
     <!-- ISO2 Column -->

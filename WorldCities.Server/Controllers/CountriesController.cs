@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Dynamic.Core;
 using WorldCities.Server.Data;
 using WorldCities.Server.Data.Models;
 
@@ -107,6 +108,35 @@ namespace WorldCities.Server.Controllers
         private bool CountryExists(int id)
         {
             return _context.Countries.Any(e => e.Id == id);
+        }
+
+        [HttpPost]
+        [Route("IsDupeField")]
+        public bool IsDupeField(
+            int countryId,
+            string fieldName,
+            string fieldValue)
+        {
+            // Default approach using strongly-typed lambda expressions
+            //return fieldName switch
+            //{
+            //    "name" => _context.Countries.Any(
+            //                            c => c.Name == fieldValue && c.Id != countryId),
+            //    "iso2" => _context.Countries.Any(
+            //                            c => c.ISO2 == fieldValue && c.Id != countryId),
+            //    "iso3" => _context.Countries.Any(
+            //                            c => c.ISO3 == fieldValue && c.Id != countryId),
+            //    _ => false
+            //};
+
+            // Alternative approach using System.Linq.Dynamic.Core
+            // Note: May come with minor performance penalty due
+            // to additional overhead of using library.
+            return ApiResult<Country>.IsValidProperty(fieldName, true)
+                && _context.Countries.Any(
+                    string.Format("{0} == @0 && Id != @1", fieldName),
+                    fieldValue,
+                    countryId);
         }
     }
 }
