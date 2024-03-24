@@ -11,6 +11,9 @@
                    formControlName="name"
                    required
                    placeholder="Type a name" />
+            <mat-error *ngIf="form.controls['name'].errors?.['required']">
+                Name is required.
+            </mat-error>
         </mat-form-field>
 
         <!-- Lat -->
@@ -20,6 +23,9 @@
                    formControlName="lat"
                    required
                    placeholder="Insert latitude" />
+            <mat-error *ngIf="form.controls['lat'].errors?.['required']">
+                Latitude is required.
+            </mat-error>
         </mat-form-field>
 
         <!-- Lon -->
@@ -29,24 +35,31 @@
                    formControlName="lon"
                    required
                    placeholder="Insert longitude" />
+            <mat-error *ngIf="form.controls['lon'].errors?.['required']">
+                Longitude is required.
+            </mat-error>
         </mat-form-field>
 
         <!-- Country -->
         <mat-form-field *ngIf="countries">
             <mat-label>Select a Country...</mat-label>
             <mat-select id="countryId"
-                formControlName="countryId">
+                        formControlName="countryId">
                 <mat-option *ngFor="let country of countries"
-                    [value]="country.id">
+                            [value]="country.id">
                     {{ country.name }}
                 </mat-option>
             </mat-select>
+            <mat-error *ngIf="form.controls['countryId'].errors?.['required']">
+                Country is required.
+            </mat-error>
         </mat-form-field>
 
         <div>
             <button mat-flat-button
                 color="primary"
-                type="submit">
+                type="submit"
+                [disabled]="!form.valid">
                 {{ this.id ? "Save" : "Create" }}
             </button>
 
