@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WorldCities.Server.Data;
 using WorldCities.Server.Data.Models;
@@ -12,20 +7,29 @@ namespace WorldCities.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CountriesController : ControllerBase
+    public class CountriesController(ApplicationDbContext context) : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
-
-        public CountriesController(ApplicationDbContext context)
-        {
-            _context = context;
-        }
+        private readonly ApplicationDbContext _context = context;
 
         // GET: api/Countries
+        // Get: api/Countries/?pageIndex=0&pageSize=10
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Country>>> GetCountries()
+        public async Task<ActionResult<ApiResult<Country>>> GetCountries(
+            int pageIndex = 0,
+            int pageSize = 10,
+            string? sortColumn = null,
+            string? sortOrder = null,
+            string? filterColumn = null,
+            string? filterQuery = null)
         {
-            return await _context.Countries.ToListAsync();
+            return await ApiResult<Country>.CreateAsync(
+                _context.Countries.AsNoTracking(),
+                pageIndex,
+                pageSize,
+                sortColumn,
+                sortOrder,
+                filterColumn,
+                filterQuery);
         }
 
         // GET: api/Countries/5
