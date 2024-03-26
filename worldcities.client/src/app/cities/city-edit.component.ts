@@ -34,8 +34,14 @@ export class CityEditComponent extends BaseFormComponent implements OnInit {
   ngOnInit() {
     this.form = new FormGroup({
       name: new FormControl('', Validators.required),
-      lat: new FormControl('', Validators.required),
-      lon: new FormControl('', Validators.required),
+      lat: new FormControl('', [
+        Validators.required,
+        Validators.pattern(/^\-?\d+(\.\d{1,4})?$/)
+      ]),
+      lon: new FormControl('', [
+        Validators.required,
+        Validators.pattern(/^\-?\d+(\.\d{1,4})?$/)
+      ]),
       countryId: new FormControl('', Validators.required)
     }, null, this.isDupeCity());
 
@@ -61,7 +67,7 @@ export class CityEditComponent extends BaseFormComponent implements OnInit {
     } else {
       // CREATE mode
       this.title = "Create a new City";
-    }    
+    }
   }
 
   loadCountries() {
@@ -123,7 +129,7 @@ export class CityEditComponent extends BaseFormComponent implements OnInit {
       var url = environment.baseUrl + 'api/Cities/IsDupeCity';
 
       return this.http.post<boolean>(url, city).pipe(
-        map(result => (result ? { isDupeCity: true } : null))        
+        map(result => (result ? { isDupeCity: true } : null))
       );
     }
   }
