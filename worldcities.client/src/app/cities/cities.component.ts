@@ -14,7 +14,7 @@ import type { City } from './city';
 })
 export class CitiesComponent implements OnInit {
   public displayedColumns: Array<string> = [
-    'id', 'name', 'lat', 'lon'
+    'id', 'name', 'lat', 'lon', 'countryName'
   ];
   public cities!: MatTableDataSource<City>;
   defaultPageIndex: number = 0;
