@@ -14,7 +14,7 @@ import type { Country } from './country';
 })
 export class CountriesComponent implements OnInit {
   public displayedColumns: Array<string> = [
-    'id', 'name', 'iso2', 'iso3'
+    'id', 'name', 'iso2', 'iso3', 'totalCities'
   ];
   public countries!: MatTableDataSource<Country>;
 
