@@ -6,6 +6,7 @@ import { AbstractControl, AsyncValidatorFn, FormBuilder, FormGroup, Validators }
 import { Observable, map } from 'rxjs';
 import { BaseFormComponent } from '../base-form.component';
 import type { Country } from './country';
+import { CountryService } from './country.service';
 
 @Component({
   selector: 'app-country-edit',
@@ -26,7 +27,7 @@ export class CountryEditComponent extends BaseFormComponent implements OnInit {
     private fb: FormBuilder,
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private http: HttpClient) {
+    private countryService: CountryService) {
     super();
   }
 
@@ -60,16 +61,16 @@ export class CountryEditComponent extends BaseFormComponent implements OnInit {
     this.id = idParam ? +idParam : 0;
     if (this.id) {
       // EDIT mode
-      var url = environment.baseUrl + "api/Countries/" + this.id;
-      this.http.get<Country>(url).subscribe({
-        next: (result) => {
-          this.country = result;
-          this.title = "Edit - " + this.country.name;
+      this.countryService.get(this.id)
+        .subscribe({
+          next: (result) => {
+            this.country = result;
+            this.title = "Edit - " + this.country.name;
 
-          this.form.patchValue(this.country);
-        },
-        error: (error) => console.error(error)
-      });
+            this.form.patchValue(this.country);
+          },
+          error: (error) => console.error(error)
+        });
     } else {
       // CREATE mode
       this.title = "Create a new Country";
@@ -85,24 +86,24 @@ export class CountryEditComponent extends BaseFormComponent implements OnInit {
 
       if (this.id) {
         // EDIT mode
-        var url = environment.baseUrl + "api/Countries/" + country.id;
-        this.http.put<Country>(url, country).subscribe({
-          next: (result) => {
-            console.log("Country " + country!.id + " has been updated.");
-            this.router.navigate(['/countries']);
-          },
-          error: (error) => console.error(error)
-        });
+        this.countryService.put(country)
+          .subscribe({
+            next: (result) => {
+              console.log("Country " + country!.id + " has been updated.");
+              this.router.navigate(['/countries']);
+            },
+            error: (error) => console.error(error)
+          });
       } else {
         // CREATE mode
-        var url = environment.baseUrl + "api/Countries";
-        this.http.post<Country>(url, country).subscribe({
-          next: (result) => {
-            console.log("Country " + result.id + " has been created.");
-            this.router.navigate(["/countries"]);
-          },
-          error: (error) => console.error(error)
-        });
+        this.countryService.post(country)
+          .subscribe({
+            next: (result) => {
+              console.log("Country " + result.id + " has been created.");
+              this.router.navigate(["/countries"]);
+            },
+            error: (error) => console.error(error)
+          });
       }
     }
   }
@@ -111,14 +112,11 @@ export class CountryEditComponent extends BaseFormComponent implements OnInit {
     return (control: AbstractControl): Observable<{
       [key: string]: any
     } | null> => {
-      var params = new HttpParams()
-        .set("countryId", (this.id) ? this.id.toString() : "0")
-        .set("fieldName", fieldName)
-        .set("fieldValue", control.value);
-      var url = environment.baseUrl + "api/Countries/IsDupeField";
-
-      return this.http.post<boolean>(url, null, { params })
-        .pipe(map(result => (result ? { isDupeField: true } : null)));
+      return this.countryService.isDupeField(
+        this.id ?? 0,
+        fieldName,
+        control.value
+      ).pipe(map(result => (result ? { isDupeField: true } : null)));
     }
   }
 }
