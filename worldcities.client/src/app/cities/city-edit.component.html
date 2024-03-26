@@ -30,7 +30,9 @@
                    formControlName="lat"
                    required
                    placeholder="Insert latitude" />
-            <mat-error *ngFor="let error of getErrors(form.get('lat')!, 'Latitude')">
+            <mat-error *ngFor="let error of getErrors(form.get('lat')!,
+                'Latitude',
+                { 'pattern': 'requires a positive or negative number with 0-4 decimal values.' })">
                 {{ error }}
             </mat-error>
         </mat-form-field>
@@ -42,7 +44,9 @@
                    formControlName="lon"
                    required
                    placeholder="Insert longitude" />
-            <mat-error *ngFor="let error of getErrors(form.get('lon')!, 'Longitude')">
+            <mat-error *ngFor="let error of getErrors(form.get('lon')!,
+                'Longitude',
+                { 'pattern': 'requires a positive or negative number with 0-4 decimal values.' })">
                 {{ error }}
             </mat-error>
         </mat-form-field>
@@ -64,9 +68,9 @@
 
         <div>
             <button mat-flat-button
-                color="primary"
-                type="submit"
-                [disabled]="!form.valid">
+                    color="primary"
+                    type="submit"
+                    [disabled]="!form.valid">
                 {{ this.id ? "Save" : "Create" }}
             </button>
 

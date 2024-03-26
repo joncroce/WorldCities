@@ -23,7 +23,9 @@
                    formControlName="iso2"
                    required
                    placeholder="Insert the ISO2 Country code" />
-            <mat-error *ngFor="let error of getErrors(form.get('iso2')!, 'ISO 3166-1 ALPHA-2 Country code')">
+            <mat-error *ngFor="let error of getErrors(form.get('iso2')!,
+                'ISO 3166-1 ALPHA-2 Country code',
+                { 'pattern': 'requires 2 letters.' })">
                 {{ error }}
             </mat-error>
         </mat-form-field>
@@ -35,7 +37,9 @@
                    formControlName="iso3"
                    required
                    placeholder="Insert the ISO3 Country code" />
-            <mat-error *ngFor="let error of getErrors(form.get('iso3')!, 'ISO 3166-1 ALPHA- Country code')">
+            <mat-error *ngFor="let error of getErrors(form.get('iso3')!,
+                'ISO 3166-1 ALPHA- Country code',
+                { 'pattern': 'requires 3 letters.' })">
                 {{ error }}
             </mat-error>
         </mat-form-field>

@@ -10,19 +10,20 @@ export abstract class BaseFormComponent {
   getErrors(
     control: AbstractControl,
     displayName: string,
+    customMessages: Record<string, string> | null = null
   ): Array<String> {
     var errors: Array<string> = [];
 
     Object.keys(control.errors ?? {}).forEach((key) => {
       switch (key) {
         case 'required':
-          errors.push(`${displayName} is required.`);
+          errors.push(`${displayName} ${customMessages?.[key] ?? "is required."}`);
           break;
         case 'pattern':
-          errors.push(`${displayName} contains invalid characters.`);
+          errors.push(`${displayName} ${customMessages?.[key] ?? "contains invalid characters."}`);
           break;
         case 'isDupeField':
-          errors.push(`${displayName} already exists; please choose another.`);
+          errors.push(`${displayName} ${customMessages?.[key] ?? "already exists; please choose another."}`);
           break;
         default:
           errors.push(`${displayName} is invalid.`);
