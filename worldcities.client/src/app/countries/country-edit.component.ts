@@ -12,6 +12,31 @@ import type { Country } from './country';
   styleUrls: ['./country-edit.component.scss']
 })
 export class CountryEditComponent implements OnInit {
+  getErrors(
+    control: AbstractControl,
+    displayName: string,
+  ): Array<String> {
+    var errors: Array<string> = [];
+
+    Object.keys(control.errors ?? {}).forEach((key) => {
+      switch (key) {
+        case 'required':
+          errors.push(`${displayName} is required.`);
+          break;
+        case 'pattern':
+          errors.push(`${displayName} contains invalid characters.`);
+          break;
+        case 'isDupeField':
+          errors.push(`${displayName} already exists; please choose another.`);
+          break;
+        default:
+          errors.push(`${displayName} is invalid.`);
+      }
+    });
+
+    return errors;
+  }
+
   title?: string;
   form!: FormGroup;
   country?: Country;
