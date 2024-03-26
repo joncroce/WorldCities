@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from '../../environments/environment.development';
 import { AbstractControl, AsyncValidatorFn, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Observable, map } from 'rxjs';
+import { BaseFormComponent } from '../base-form.component';
 import type { Country } from './country';
 
 @Component({
@@ -11,34 +12,8 @@ import type { Country } from './country';
   templateUrl: './country-edit.component.html',
   styleUrls: ['./country-edit.component.scss']
 })
-export class CountryEditComponent implements OnInit {
-  getErrors(
-    control: AbstractControl,
-    displayName: string,
-  ): Array<String> {
-    var errors: Array<string> = [];
-
-    Object.keys(control.errors ?? {}).forEach((key) => {
-      switch (key) {
-        case 'required':
-          errors.push(`${displayName} is required.`);
-          break;
-        case 'pattern':
-          errors.push(`${displayName} contains invalid characters.`);
-          break;
-        case 'isDupeField':
-          errors.push(`${displayName} already exists; please choose another.`);
-          break;
-        default:
-          errors.push(`${displayName} is invalid.`);
-      }
-    });
-
-    return errors;
-  }
-
+export class CountryEditComponent extends BaseFormComponent implements OnInit {
   title?: string;
-  form!: FormGroup;
   country?: Country;
   // The country object id as fetched from the active route
   // NULL when adding a new country, and
@@ -51,8 +26,9 @@ export class CountryEditComponent implements OnInit {
     private fb: FormBuilder,
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private http: HttpClient
-  ) { }
+    private http: HttpClient) {
+    super();
+  }
 
   ngOnInit() {
     this.form = this.fb.group({

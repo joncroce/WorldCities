@@ -3,7 +3,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, map } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { AbstractControl, AsyncValidatorFn, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, AsyncValidatorFn, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { BaseFormComponent } from '../base-form.component';
 import type { Country } from './../countries/country';
 import type { City } from './city';
 
@@ -12,9 +13,8 @@ import type { City } from './city';
   templateUrl: './city-edit.component.html',
   styleUrls: ['./city-edit.component.scss']
 })
-export class CityEditComponent implements OnInit {
+export class CityEditComponent extends BaseFormComponent implements OnInit {
   title?: string;
-  form!: FormGroup;
   city?: City;
   // The city object id as fetched from the active route
   // NULL when adding a new city, and
@@ -24,10 +24,12 @@ export class CityEditComponent implements OnInit {
   countries?: Array<Country>;
 
   constructor(
+    private fb: FormBuilder,
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private http: HttpClient
-  ) { }
+    private http: HttpClient) {
+    super();
+  }
 
   ngOnInit() {
     this.form = new FormGroup({
