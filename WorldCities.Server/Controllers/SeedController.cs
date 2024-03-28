@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OfficeOpenXml;
 using System.Security;
@@ -8,11 +9,18 @@ using WorldCities.Server.Data.Models;
 namespace WorldCities.Server.Controllers;
 [Route("api/[controller]/[action]")]
 [ApiController]
-public class SeedController(ApplicationDbContext context, IWebHostEnvironment env) 
-    : ControllerBase
+public class SeedController(
+    ApplicationDbContext context,
+    RoleManager<IdentityRole> roleManager,
+    UserManager<ApplicationUser> userManager,
+    IWebHostEnvironment env,
+    IConfiguration configuration) : ControllerBase
 {
     private readonly ApplicationDbContext _context = context;
+    private readonly RoleManager<IdentityRole> _roleMangager = roleManager;
+    private readonly UserManager<ApplicationUser> _userManager = userManager;
     private readonly IWebHostEnvironment _env = env;
+    private readonly IConfiguration _configuration = configuration;
 
     [HttpGet]
     public async Task<ActionResult> Import()
@@ -138,6 +146,94 @@ public class SeedController(ApplicationDbContext context, IWebHostEnvironment en
         {
             Cities = numberOfCitiesAdded,
             Countries = numberOfCountriesAdded
+        });
+    }
+
+    [HttpGet]
+    public async Task<ActionResult> CreateDefaultUsers()
+    {
+        // Setup the default role names
+        string role_RegisteredUser = "RegisteredUser";
+        string role_Administrator = "Administrator";
+
+        // Create the default roles (if they don't already exist)
+        if (await _roleMangager.FindByNameAsync(role_RegisteredUser) == null)
+        {
+            await _roleMangager.CreateAsync(new(role_RegisteredUser));
+        }
+        if (await _roleMangager.FindByNameAsync(role_Administrator) == null)
+        {
+            await _roleMangager.CreateAsync(new(role_Administrator));
+        }
+
+        // Create a list to track the newly added users
+        List<ApplicationUser> addedUserList = [];
+
+        // Check for existence of admin user
+        var email_Admin = "admin@email.com";
+        if (await _userManager.FindByNameAsync(email_Admin) == null)
+        {
+            ApplicationUser user_Admin = new()
+            {
+                SecurityStamp = Guid.NewGuid().ToString(),
+                UserName = email_Admin,
+                Email = email_Admin
+            };
+
+            // Insert the admin user into the database
+            await _userManager.CreateAsync(
+                user_Admin,
+                _configuration["DefaultPasswords:Administrator"]!);
+
+            // Assign the "Registered User" and "Administrator" roles
+            await _userManager.AddToRoleAsync(user_Admin, role_RegisteredUser);
+            await _userManager.AddToRoleAsync(user_Admin, role_Administrator);
+
+            // Confirm the email and remove lockout
+            user_Admin.EmailConfirmed = true;
+            user_Admin.LockoutEnabled = false;
+
+            // Add the admin user to the newly added users list
+            addedUserList.Add(user_Admin);
+        }
+
+        // Check for existence of standard user
+        var email_User = "user@email.com";
+        if (await _userManager.FindByNameAsync(email_User) == null)
+        {
+            ApplicationUser user_User = new()
+            {
+                SecurityStamp = Guid.NewGuid().ToString(),
+                UserName = email_User,
+                Email = email_User
+            };
+
+            // Insert the standard user into the database
+            await _userManager.CreateAsync(
+                user_User,
+                _configuration["DefaultPasswords:RegisteredUser"]!);
+
+            // Assign the "Registered User" role
+            await _userManager.AddToRoleAsync(user_User, role_RegisteredUser);
+
+            // Confirm the email and remove lockout
+            user_User.EmailConfirmed = true;
+            user_User.LockoutEnabled = false;
+
+            // Add the admin user to the newly added users list
+            addedUserList.Add(user_User);
+        }
+
+        // If newly added users list is not empty, persist changes to database
+        if (addedUserList.Count > 0)
+        {
+            await _context.SaveChangesAsync();
+        }
+
+        return new JsonResult(new
+        {
+            Count = addedUserList.Count,
+            Users = addedUserList
         });
     }
 }
