@@ -4,6 +4,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { CountryService } from './country.service';
+import { AuthService } from '../auth/auth.service';
 import type { Country } from './country';
 
 @Component({
@@ -30,7 +31,9 @@ export class CountriesComponent implements OnInit {
 
   filterTextChanged: Subject<string> = new Subject<string>();
 
-  constructor(private countryService: CountryService) { }
+  constructor(
+    private countryService: CountryService,
+    public authService: AuthService) { }
 
   ngOnInit() {
     this.loadData();

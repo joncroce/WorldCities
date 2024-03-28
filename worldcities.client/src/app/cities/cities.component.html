@@ -5,18 +5,18 @@
 <p *ngIf="!cities"><em>Loading...</em></p>
 
 <button mat-flat-button
-    color="primary"
-    class="btn-add"
-    *ngIf="cities"
-    [routerLink]="['/city']">
+        *ngIf="cities && authService.isAuthenticated()"
+        color="primary"
+        class="btn-add"
+        [routerLink]="['/city']">
     Add a new City
 </button>
 
 <mat-form-field [hidden]="!cities">
     <input matInput
-        #filter
-        (keyup)="onFilterTextChanged(filter.value)"
-        placeholder="Filter by name (or part of it)...">
+           #filter
+           (keyup)="onFilterTextChanged(filter.value)"
+           placeholder="Filter by name (or part of it)...">
 </mat-form-field>
 
 <table mat-table
@@ -64,10 +64,8 @@
 </table>
 
 <!-- Pagination Directive -->
-<mat-paginator
-    [hidden]="!cities"
-    (page)="getData($event)"
-    [pageSize]="10"
-    [pageSizeOptions]="[10, 20, 50]"
-    showFirstLastButtons
-></mat-paginator>
+<mat-paginator [hidden]="!cities"
+               (page)="getData($event)"
+               [pageSize]="10"
+               [pageSizeOptions]="[10, 20, 50]"
+               showFirstLastButtons></mat-paginator>

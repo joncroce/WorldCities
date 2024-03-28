@@ -4,6 +4,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { CityService } from './city.service';
+import { AuthService } from '../auth/auth.service';
 import type { City } from './city';
 
 @Component({
@@ -29,7 +30,9 @@ export class CitiesComponent implements OnInit {
 
   filterTextChanged: Subject<string> = new Subject<string>();
 
-  constructor(private cityService: CityService) { }
+  constructor(
+    private cityService: CityService,
+    public authService: AuthService) { }
 
   ngOnInit() {
     this.loadData();

@@ -5,6 +5,7 @@
 <p *ngIf="!countries"><em>Loading...</em></p>
 
 <button mat-flat-button
+        *ngIf="countries && authService.isAuthenticated()"
         color="primary"
         class="btn-add"
         [routerLink]="['/country']">
