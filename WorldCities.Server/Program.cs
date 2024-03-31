@@ -59,5 +59,6 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+app.MapMethods("/api/heartbeat", ["HEAD"], () => Results.Ok());
 app.MapFallbackToFile("/index.html");
 app.Run();

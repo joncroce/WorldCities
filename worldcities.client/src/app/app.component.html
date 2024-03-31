@@ -1,4 +1,12 @@
 <app-nav-menu></app-nav-menu>
+<div class="alert alert-warning" *ngIf="isOffline | async">
+    <p><strong>WARNING</strong>: The app is currently <em>offline</em>.</p>
+    <p>Some features that rely upon the back-end might not work as expected.</p>
+    <p>
+        This message will automatically disappear as soon as the internet connection
+        becomes available again.
+    </p>
+</div>
 <div class="container">
   <router-outlet></router-outlet>
 </div>

@@ -7,3 +7,21 @@
 .container {
     padding: 10px;
 }
+
+.alert {
+  position: relative;
+  padding: 0.75rem 1.25rem;
+  margin-block-end: 1rem;
+  border: 1px solid transparent;
+  border-radius: 0.25rem;
+
+  &.alert-warning {
+    color: #856404;
+    background-color: #fff3cd;
+    border-color: #ffeeba;
+  }
+
+  p {
+    margin-block: 0.5em;
+  }
+}
